@@ -1,6 +1,6 @@
 import axios from "axios";
 export const base_url = "https://upskilling-egypt.com:3006/api/v1";
-console.log("fefe", localStorage.getItem("token"));
+
 export const axiosInstance = axios.create({
   baseURL: base_url,
   headers: {

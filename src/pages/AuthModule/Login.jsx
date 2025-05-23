@@ -6,7 +6,7 @@ import { FaLock } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { base_url } from "../../axios/baseUrl";
+import { base_url, USER_URLS } from "../../axios/baseUrl";
 const Login = ({ setToken }) => {
   const {
     register,
@@ -17,7 +17,7 @@ const Login = ({ setToken }) => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        `${base_url}/login`,
+        `${USER_URLS.login}`,
 
         data
       );
