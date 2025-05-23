@@ -12,7 +12,6 @@ import { toast } from "react-toastify";
 const CategoriesList = () => {
   const [list, setList] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [isOpenEdit, setIsOpenEdit] = useState(false);
 
   const [isOpenView, setIsOpenView] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
@@ -84,33 +83,23 @@ const CategoriesList = () => {
           }}
           onEdit={(item) => {
             setSelectedCategory(item);
-            setIsOpenEdit(true);
+            setIsOpen(true);
           }}
           onDelete={(item) => {
             setSelectedCategory(item);
             setIsOpenDelete(true);
           }}
         />
-        {isOpen && (
-          <AddEditCategory
-            isOpen={isOpen}
-            onClose={() => setIsOpen(false)}
-            handleGetList={handleGetList}
-          />
-        )}
 
-        {isOpenEdit && (
-          <AddEditCategory
-            isOpen={isOpenEdit}
-            onClose={() => {
-              setIsOpenEdit(false);
-              setSelectedCategory(null);
-            }}
-            defaultValues={selectedCategory}
-            handleGetList={handleGetList}
-          />
-        )}
-
+        <AddEditCategory
+          isOpen={isOpen}
+          onClose={() => {
+            setIsOpen(false);
+            setSelectedCategory(null);
+          }}
+          defaultValues={selectedCategory}
+          handleGetList={handleGetList}
+        />
         {isOpenView && (
           <ViewCategory
             isOpen={isOpenView}
