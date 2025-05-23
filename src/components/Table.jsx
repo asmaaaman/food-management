@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import ActionsMenu from "./ActionsMenu";
+import NoData from "./NoData";
 
 const Table = ({ tableHeaders, tableBody, onView, onDelete, onEdit }) => {
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
@@ -26,7 +27,7 @@ const Table = ({ tableHeaders, tableBody, onView, onDelete, onEdit }) => {
           {tableBody.length === 0 ? (
             <tr>
               <td colSpan={tableHeaders.length} className="text-center">
-                No data available.
+                <NoData />
               </td>
             </tr>
           ) : (

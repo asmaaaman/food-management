@@ -5,17 +5,18 @@ import { FaRegCalendarAlt, FaUser } from "react-icons/fa";
 import { FaUnlockKeyhole } from "react-icons/fa6";
 import { HiHome } from "react-icons/hi";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import sideBarLogo from "../assets/sideBarLogo.png";
 
 const SideBar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
-
+  const navigate = useNavigate();
   const [collapse, setCollapse] = React.useState(false);
   const handleCollapse = () => {
     setCollapse(!collapse);
   };
+
   const menuItems = [
     { title: "Home", icon: <HiHome />, to: "/dashboard" },
     { title: "Users", icon: <FaUser />, to: "/dashboard/users" },
@@ -58,10 +59,10 @@ const SideBar = () => {
 
           <MenuItem
             icon={<CiLogout />}
-            // onClick={() => {
-            //   logOut();
-            //   navigate("/login");
-            // }}
+            onClick={() => {
+              localStorage.removeItem("token");
+              navigate("/login");
+            }}
           >
             Logout
           </MenuItem>
