@@ -6,7 +6,7 @@ import { FaLock } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { base_url, USER_URLS } from "../../axios/baseUrl";
+import { USER_URLS } from "../../axios/baseUrl";
 const Login = ({ setToken }) => {
   const {
     register,
