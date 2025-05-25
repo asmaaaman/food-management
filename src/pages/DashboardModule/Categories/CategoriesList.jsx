@@ -8,20 +8,19 @@ import AddEditCategory from "./AddEditCategory";
 import ViewCategory from "./ViewCategory";
 import DeleteModal from "../../../components/DeleteModal";
 import { toast } from "react-toastify";
-
 import PaginationModule from "../../../components/Pagination";
+import Search from "../../../components/Search";
 
 const CategoriesList = () => {
   const [list, setList] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-
   const [isOpenView, setIsOpenView] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
-
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [search, setSearch] = useState("");
 
   const handleGetList = async (page = 1, size = 10) => {
     try {
@@ -29,6 +28,7 @@ const CategoriesList = () => {
         params: {
           pageSize: size,
           pageNumber: page,
+          name: search,
         },
       });
       const { pageNumber, totalNumberOfPages, pageSize } = response.data;
@@ -42,8 +42,8 @@ const CategoriesList = () => {
     }
   };
   useEffect(() => {
-    handleGetList(pageNumber, pageSize);
-  }, [pageNumber, pageSize]);
+    handleGetList(pageNumber, pageSize, search);
+  }, [pageNumber, pageSize, search]);
 
   const handleDelete = async () => {
     try {
@@ -76,6 +76,11 @@ const CategoriesList = () => {
           description="You can check all details"
           btnTitle="Add New Category"
           setIsOpen={setIsOpen}
+        />
+        <Search
+          search={search}
+          setSearch={setSearch}
+          searchPlaceHolder="Search by name ..."
         />
         <Table
           tableHeaders={[
