@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DashboardHeader from "../../../components/DashboardHeader";
 import usersHeader from "../../../assets/usersHeader.png";
 import Table from "../../../components/Table";
@@ -9,6 +9,8 @@ import ViewCategory from "./ViewCategory";
 import DeleteModal from "../../../components/DeleteModal";
 import { toast } from "react-toastify";
 
+import PaginationModule from "../../../components/Pagination";
+
 const CategoriesList = () => {
   const [list, setList] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -17,14 +19,22 @@ const CategoriesList = () => {
   const [isOpenDelete, setIsOpenDelete] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const handleGetList = async () => {
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const handleGetList = async (page = 1, size = 10) => {
     try {
       const response = await axiosInstance.get(Categories_URLS.categories, {
         params: {
-          pageSize: 10,
-          pageNumber: 1,
+          pageSize: size,
+          pageNumber: page,
         },
       });
+      const { pageNumber, totalNumberOfPages, pageSize } = response.data;
+      setPageSize(pageSize);
+      setPageNumber(pageNumber);
+      setTotalPages(totalNumberOfPages);
 
       setList(response.data.data);
     } catch (error) {
@@ -32,8 +42,8 @@ const CategoriesList = () => {
     }
   };
   useEffect(() => {
-    handleGetList();
-  }, []);
+    handleGetList(pageNumber, pageSize);
+  }, [pageNumber, pageSize]);
 
   const handleDelete = async () => {
     try {
@@ -90,7 +100,11 @@ const CategoriesList = () => {
             setIsOpenDelete(true);
           }}
         />
-
+        <PaginationModule
+          pageNumber={pageNumber}
+          totalPages={totalPages}
+          onPageChange={(page) => setPageNumber(page)}
+        />
         <AddEditCategory
           isOpen={isOpen}
           onClose={() => {

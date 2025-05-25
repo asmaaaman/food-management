@@ -16,10 +16,15 @@ const DeleteModal = ({
 
         <h5 className="fw-bold mt-3">{title}</h5>
         <p className="text-muted mb-4">{description}</p>
-
-        <Button variant="outline-danger" onClick={onConfirm}>
-          Delete this item
-        </Button>
+        <div className="d-flex justify-content-end">
+          <Button
+            className="fw-bold mb-1"
+            variant="outline-danger"
+            onClick={onConfirm}
+          >
+            Delete this item
+          </Button>
+        </div>
       </div>
     </BaseModal>
   );

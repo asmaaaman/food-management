@@ -85,3 +85,16 @@
 .th-titles {
   color: #1f263e !important;
 }
+.active-paginate a {
+  background-color: #009247;
+  color: white;
+  box-shadow: none;
+}
+.pagination .not-active-paginate a {
+  color: black;
+}
+.active-paginate a:focus {
+  background-color: #009247;
+  color: white;
+  box-shadow: none;
+}

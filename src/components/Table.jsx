@@ -12,7 +12,7 @@ const Table = ({ tableHeaders, tableBody, onView, onDelete, onEdit }) => {
     return isDate ? dayjs(value).format("DD/MM/YYYY") : value ?? "-";
   };
   return (
-    <div className="table-responsive">
+    <div className="table-responsive mt-3">
       <table className="table table-borderless">
         <thead className="table-header">
           <tr>
