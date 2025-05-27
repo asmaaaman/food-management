@@ -1,22 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import SideBar from "../components/SideBar";
 import DashboardNavbar from "../components/DashboardNavbar";
 import { Outlet } from "react-router-dom";
-import DashboardHeader from "../components/DashboardHeader";
 
 const DashboardLayout = () => {
+  const [collapse, setCollapse] = useState(false);
+
   return (
     <div className="d-flex min-vh-100">
-      <div>
-        <SideBar />
-      </div>
+      <SideBar collapse={collapse} setCollapse={setCollapse} />
 
-      <div className="w-100">
+      <div
+        className="w-100"
+        style={{
+          marginLeft: collapse ? "80px" : "250px",
+          transition: "margin 0.3s",
+        }}
+      >
         <DashboardNavbar />
-
-        <div className="flex-grow-1">
-          <Outlet />
-        </div>
+        <Outlet />
       </div>
     </div>
   );

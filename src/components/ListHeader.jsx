@@ -1,6 +1,6 @@
 import React from "react";
 
-const ListHeader = ({ title, description, btnTitle, setIsOpen }) => {
+const ListHeader = ({ title, description, btnTitle, onAction }) => {
   return (
     <div className="mt-4 d-flex justify-content-between align-items-center">
       <div>
@@ -10,11 +10,7 @@ const ListHeader = ({ title, description, btnTitle, setIsOpen }) => {
         </p>
       </div>
 
-      <button
-        onClick={() => setIsOpen(true)}
-        type="button"
-        class="btn btn-success"
-      >
+      <button onClick={onAction} type="button" class="btn btn-success">
         {btnTitle}
       </button>
     </div>

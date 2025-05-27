@@ -75,12 +75,12 @@ const CategoriesList = () => {
           title="Categories Table Details"
           description="You can check all details"
           btnTitle="Add New Category"
-          setIsOpen={setIsOpen}
+          onAction={() => setIsOpen(true)}
         />
         <Search
           search={search}
           setSearch={setSearch}
-          searchPlaceHolder="Search by name ..."
+          searchPlaceHolder="Search here ..."
         />
         <Table
           tableHeaders={[

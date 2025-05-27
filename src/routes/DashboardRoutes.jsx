@@ -2,6 +2,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import CategoriesList from "../pages/DashboardModule/Categories/CategoriesList";
 import ChangePassword from "../pages/DashboardModule/ChangePassword/ChangePassword";
 import Home from "../pages/DashboardModule/Home/Home";
+import AddEditRecipe from "../pages/DashboardModule/Recepies/AddEditRecipe";
 import RecipesList from "../pages/DashboardModule/Recepies/RecipesList";
 import UsersList from "../pages/DashboardModule/Users/UsersList";
 import ViewUser from "../pages/DashboardModule/Users/ViewUser";
@@ -31,6 +32,10 @@ const DashboardRoutes = (token) => [
       {
         path: "recipes",
         element: <RecipesList />,
+      },
+      {
+        path: "recipe/add",
+        element: <AddEditRecipe />,
       },
       {
         path: "categories",

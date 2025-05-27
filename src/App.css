@@ -98,3 +98,7 @@
   color: white;
   box-shadow: none;
 }
+.recipe-header {
+  background-color: #f0ffef;
+  border-radius: 15px;
+}

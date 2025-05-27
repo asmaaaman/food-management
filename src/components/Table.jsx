@@ -47,6 +47,8 @@ const Table = ({ tableHeaders, tableBody, onView, onDelete, onEdit }) => {
                         onEdit={() => onEdit(item)}
                         onDelete={() => onDelete(item)}
                       />
+                    ) : header.render ? (
+                      header.render(item)
                     ) : (
                       formatCellValue(header.key, item[header.key])
                     )}
