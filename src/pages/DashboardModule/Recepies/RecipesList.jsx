@@ -14,22 +14,28 @@ import {
 import Table from "../../../components/Table";
 import PaginationModule from "../../../components/Pagination";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import DeleteModal from "../../../components/DeleteModal";
+import Loader from "../../../components/Loader";
 
 const RecipesList = () => {
   const navigate = useNavigate();
+  const [loader, setLoader] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedTag, setSelectedTag] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+
   const [selectedItem, setSelectedItem] = useState(null);
-  console.log("sele", selectedItem);
+
   const [list, setList] = useState([]);
   const [tagIds, setTagList] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [categories, setCategoryList] = useState([]);
 
   const [pageSize, setPageSize] = useState(10);
 
   const [totalPages, setTotalPages] = useState(1);
   const [pageNumber, setPageNumber] = useState(1);
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
   const renderImage = (item) => (
     <img
       src={`${base_img_url}/${item.imagePath}`}
@@ -59,20 +65,39 @@ const RecipesList = () => {
   ];
 
   const handleGetList = async (page = 1, size = 10) => {
-    const response = await axiosInstance.get(Recipes_URLS.recipes, {
-      params: {
-        pageSize: size,
-        pageNumber: page,
-        name: search,
-        tagId: selectedTag,
-        categoryId: selectedCategory,
-      },
-    });
-    const { pageNumber, totalNumberOfPages, pageSize } = response.data;
-    setPageSize(pageSize);
-    setPageNumber(pageNumber);
-    setTotalPages(totalNumberOfPages);
-    setList(response?.data?.data);
+    try {
+      setLoader(true);
+      const response = await axiosInstance.get(Recipes_URLS.recipes, {
+        params: {
+          pageSize: size,
+          pageNumber: page,
+          name: search,
+          tagId: selectedTag,
+          categoryId: selectedCategory,
+        },
+      });
+      const { pageNumber, totalNumberOfPages, pageSize } = response.data;
+      setPageSize(pageSize);
+      setPageNumber(pageNumber);
+      setTotalPages(totalNumberOfPages);
+      setList(response?.data?.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoader(false);
+    }
+  };
+  const handleDelete = async () => {
+    try {
+      await axiosInstance.delete(Recipes_URLS.delete(selectedItem.id));
+
+      // await axiosInstance.delete(`${Recipes_URLS.delete}/${selectedItem.id}`);
+      toast.success("Recipe deleted successfully");
+      handleGetList();
+      setIsOpenDelete(false);
+    } catch (error) {
+      toast.error(error.message || "Delete failed");
+    }
   };
   useEffect(() => {
     handleGetList(pageNumber, pageSize, search, selectedTag, selectedCategory);
@@ -92,60 +117,72 @@ const RecipesList = () => {
         headerImg={recipesHeader}
       />
       <>
-        <div className="container-fluid my-3">
-          <ListHeader
-            title="Recipes Table Details"
-            description="You can check all details"
-            btnTitle="Add New Recipe"
-            onAction={() => navigate("/dashboard/recipe/add")}
-          />
-          <div className="d-flex flex-wrap gap-3 mt-4">
-            <Search
-              search={search}
-              setSearch={setSearch}
-              searchPlaceHolder="Search here ..."
+        {loader ? (
+          <Loader loader={loader} text="Loading Recipe" />
+        ) : (
+          <div className="container-fluid my-3">
+            <ListHeader
+              title="Recipes Table Details"
+              description="You can check all details"
+              btnTitle="Add New Recipe"
+              onAction={() => navigate("/dashboard/recipe/add")}
             />
-
-            <div className="d-flex gap-2">
-              <Tags
-                setSelectedTag={setSelectedTag}
-                tagIds={tagIds}
-                setTagList={setTagList}
+            <div className="d-flex flex-wrap gap-3 mt-4">
+              <Search
+                search={search}
+                setSearch={setSearch}
+                searchPlaceHolder="Search here ..."
               />
 
-              <Categories
-                setSelectedCategory={setSelectedCategory}
-                setCategoryList={setCategoryList}
-                categories={categories}
-              />
+              <div className="d-flex gap-2">
+                <Tags
+                  setSelectedTag={setSelectedTag}
+                  tagIds={tagIds}
+                  setTagList={setTagList}
+                />
+
+                <Categories
+                  setSelectedCategory={setSelectedCategory}
+                  setCategoryList={setCategoryList}
+                  categories={categories}
+                />
+              </div>
             </div>
-          </div>
 
-          <Table
-            tableHeaders={tableHeaders}
-            tableBody={list}
-            // onClose={() => setIsOpen(false)}
-            onView={(item) => {
-              setSelectedItem(item);
-              console.log("view", item);
-            }}
-            onEdit={(item) => {
-              setSelectedItem(item);
-              console.log("edit", item);
-            }}
-            onDelete={(item) => {
-              setSelectedItem(item);
-              console.log("delete", item);
-            }}
-          />
-          {totalPages > 1 && (
-            <PaginationModule
-              pageNumber={pageNumber}
-              totalPages={totalPages}
-              onPageChange={(page) => setPageNumber(page)}
+            <Table
+              tableHeaders={tableHeaders}
+              tableBody={list}
+              onView={(item) => {
+                setSelectedItem(item);
+                navigate(`/dashboard/recipe/view/${item.id}`);
+              }}
+              onEdit={(item) => {
+                setSelectedItem(item);
+                navigate(`/dashboard/recipe/edit/${item.id}`);
+              }}
+              onDelete={(item) => {
+                setSelectedItem(item);
+                setIsOpenDelete(true);
+              }}
             />
-          )}
-        </div>
+            {totalPages > 1 && (
+              <PaginationModule
+                pageNumber={pageNumber}
+                totalPages={totalPages}
+                onPageChange={(page) => setPageNumber(page)}
+              />
+            )}
+          </div>
+        )}
+        {isOpenDelete && (
+          <DeleteModal
+            isOpen={isOpenDelete}
+            onClose={() => setIsOpenDelete(false)}
+            onConfirm={handleDelete}
+            title={`Delete ${selectedItem?.name}?`}
+            description="Are you sure you want to delete this recipe? This action cannot be undone."
+          />
+        )}
       </>
     </>
   );

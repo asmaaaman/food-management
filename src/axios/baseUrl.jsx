@@ -26,6 +26,7 @@ export const Recipes_URLS = {
   recipes: `${base_url}/Recipe`,
   delete: (id) => `${base_url}/Recipe/${id}`,
   update: (id) => `${base_url}/Recipe/${id}`,
+  getRecipe: (id) => `${base_url}/Recipe/${id}`,
 };
 
 export const Tags_URLS = {
