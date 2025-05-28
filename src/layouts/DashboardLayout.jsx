@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import SideBar from "../components/SideBar";
 import DashboardNavbar from "../components/DashboardNavbar";
 import { Outlet } from "react-router-dom";
+import ChangePassword from "../pages/DashboardModule/ChangePassword/ChangePassword";
 
 const DashboardLayout = () => {
   const [collapse, setCollapse] = useState(false);
-
+  const [showChangePassword, setShowChangePassword] = useState(false);
   return (
     <div className="d-flex min-vh-100">
-      <SideBar collapse={collapse} setCollapse={setCollapse} />
+      <SideBar
+        collapse={collapse}
+        setCollapse={setCollapse}
+        setShowChangePassword={setShowChangePassword}
+      />
 
       <div
         className="w-100"
@@ -19,6 +24,9 @@ const DashboardLayout = () => {
       >
         <DashboardNavbar />
         <Outlet />
+        {showChangePassword && (
+          <ChangePassword onClose={() => setShowChangePassword(false)} />
+        )}
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ export const axiosInstance = axios.create({
 export const USER_URLS = {
   login: `${base_url}/Users/login`,
   register: `${base_url}/Users/register`,
+  changePassword: `${base_url}/Users/ChangePassword`,
   users: base_url,
   delete: (id) => `${base_url}/Users/${id}`,
 };

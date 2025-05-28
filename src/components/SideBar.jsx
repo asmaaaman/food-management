@@ -7,7 +7,7 @@ import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import sideBarLogo from "../assets/sideBarLogo.png";
 
-const SideBar = ({ collapse, setCollapse }) => {
+const SideBar = ({ collapse, setCollapse, setShowChangePassword }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ const SideBar = ({ collapse, setCollapse }) => {
     {
       title: "Change Password",
       icon: <FaUnlockKeyhole />,
-      to: "/dashboard/change-password",
+      // to: "/dashboard/change-password",
     },
   ];
 
@@ -55,10 +55,16 @@ const SideBar = ({ collapse, setCollapse }) => {
           <div className="mt-4">
             {menuItems.map((item, index) => (
               <MenuItem
-                component={<Link to={item.to} />}
                 key={index}
                 icon={item.icon}
                 className={location.pathname === item.to ? "active" : ""}
+                component={item.to ? <Link to={item.to} /> : undefined}
+                onClick={() => {
+                  if (item.to) return;
+                  if (item.title === "Change Password") {
+                    setShowChangePassword(true);
+                  }
+                }}
               >
                 {item.title}
               </MenuItem>
