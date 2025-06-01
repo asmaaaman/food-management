@@ -22,6 +22,8 @@ const RecipesList = () => {
   const navigate = useNavigate();
   const [loader, setLoader] = useState(false);
   const [search, setSearch] = useState("");
+  const [isFromSearch, setIsFromSearch] = useState(false);
+
   const [selectedTag, setSelectedTag] = useState(null);
 
   const [selectedItem, setSelectedItem] = useState(null);
@@ -66,7 +68,7 @@ const RecipesList = () => {
 
   const handleGetList = async (page = 1, size = 10) => {
     try {
-      setLoader(true);
+      if (!isFromSearch) setLoader(true);
       const response = await axiosInstance.get(Recipes_URLS.recipes, {
         params: {
           pageSize: size,
@@ -130,7 +132,10 @@ const RecipesList = () => {
             <div className="d-flex flex-wrap gap-3 mt-4">
               <Search
                 search={search}
-                setSearch={setSearch}
+                setSearch={(value) => {
+                  setIsFromSearch(true);
+                  setSearch(value);
+                }}
                 searchPlaceHolder="Search here ..."
               />
 

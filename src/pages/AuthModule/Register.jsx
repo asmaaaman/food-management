@@ -1,4 +1,3 @@
-import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { BsEye } from "react-icons/bs";
@@ -6,7 +5,8 @@ import { FaLock } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { base_url } from "../../axios/baseUrl";
+import { axiosInstance, USER_URLS } from "../../axios/baseUrl";
+
 const Register = () => {
   const {
     register,
@@ -23,8 +23,8 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     try {
-      await axios.post(
-        `${base_url}/Register`,
+      await axiosInstance.post(
+        `${USER_URLS.register}`,
 
         data
       );

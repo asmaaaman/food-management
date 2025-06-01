@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 
-const ProtectedRoutes = ({ token, children }) => {
+const ProtectedRoutes = ({ children, token }) => {
   if (!token) {
     return <Navigate to="/login" replace />;
   }

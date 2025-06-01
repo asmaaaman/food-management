@@ -5,25 +5,15 @@ import NotFound from "./pages/NotFound";
 import AuthNotFound from "./pages/AuthNotFound";
 import DashboardRoutes from "./routes/DashboardRoutes";
 import authRoutes from "./routes/AuthRoutes";
-import { jwtDecode } from "jwt-decode";
-import { useEffect, useState } from "react";
+
+import { useContext } from "react";
+import { AuthContext } from "./context/AuthContext";
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem("token"));
-
-  const [decodedToken, setIsDecoded] = useState(null);
-
-  console.log("decodedToken", decodedToken);
-  useEffect(() => {
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        setIsDecoded(decoded);
-      } catch {
-        setIsDecoded(null);
-      }
-    }
-  }, [token]);
+  let { setToken, token, decodedToken } = useContext(AuthContext);
+  if (token && !decodedToken) {
+    return <div>Loading...</div>;
+  }
 
   const routes = createBrowserRouter([
     ...DashboardRoutes(token),

@@ -1,35 +1,34 @@
-import axios from "axios";
-import React from "react";
 import { useForm } from "react-hook-form";
-import { BsEye } from "react-icons/bs";
 import { FaLock } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { USER_URLS } from "../../axios/baseUrl";
-const Login = ({ setToken }) => {
+import { axiosInstance, USER_URLS } from "../../axios/baseUrl";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
+const Login = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+  let { setToken } = useContext(AuthContext);
   // const navigate = useNavigate();
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${USER_URLS.login}`,
 
         data
       );
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", response?.data?.token);
       setToken(response.data.token);
 
       toast.success("Logged in successfully");
 
       window.location.href = "/dashboard";
     } catch (error) {
-      console.log(error);
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Login Failed");
     }
   };
   return (

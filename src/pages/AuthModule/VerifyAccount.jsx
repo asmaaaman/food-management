@@ -1,4 +1,3 @@
-import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { BsEye } from "react-icons/bs";
@@ -6,7 +5,7 @@ import { FaLock } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { base_url } from "../../axios/baseUrl";
+import { axiosInstance, USER_URLS } from "../../axios/baseUrl";
 
 const VerifyAccount = () => {
   const {
@@ -17,8 +16,8 @@ const VerifyAccount = () => {
   const navigate = useNavigate();
   const onSubmit = async (data) => {
     try {
-      await axios.put(
-        `${base_url}/verify`,
+      await axiosInstance.put(
+        `${USER_URLS.verifyAccount}`,
 
         data
       );
