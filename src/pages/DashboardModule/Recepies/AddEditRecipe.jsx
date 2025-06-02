@@ -79,8 +79,16 @@ const AddEditRecipe = () => {
 
     return formData;
   };
+  const getDefaultImageAsFile = async () => {
+    const response = await fetch("/logo.png");
+    const blob = await response.blob();
+    return new File([blob], "logo.png", { type: blob.type });
+  };
 
   const onSubmit = async (data) => {
+    if (!(data.recipeImage instanceof File)) {
+      data.recipeImage = await getDefaultImageAsFile();
+    }
     const formData = createRecipeFormData(data);
 
     if (id) {

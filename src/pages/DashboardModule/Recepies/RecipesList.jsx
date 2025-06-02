@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import DashboardHeader from "../../../components/DashboardHeader";
 import recipesHeader from "../../../assets/recepies.svg";
 import Search from "../../../components/Search";
@@ -17,27 +17,31 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import DeleteModal from "../../../components/DeleteModal";
 import Loader from "../../../components/Loader";
+import debounce from "lodash.debounce";
 
 const RecipesList = () => {
   const navigate = useNavigate();
   const [loader, setLoader] = useState(false);
-  const [search, setSearch] = useState("");
-  const [isFromSearch, setIsFromSearch] = useState(false);
-
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedTag, setSelectedTag] = useState(null);
-
   const [selectedItem, setSelectedItem] = useState(null);
-
   const [list, setList] = useState([]);
   const [tagIds, setTagList] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categories, setCategoryList] = useState([]);
-
   const [pageSize, setPageSize] = useState(10);
-
   const [totalPages, setTotalPages] = useState(1);
   const [pageNumber, setPageNumber] = useState(1);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
+
+  const debouncedSearch = useCallback(
+    debounce((value) => {
+      setSearchQuery(value);
+    }, 500),
+    []
+  );
+
   const renderImage = (item) => (
     <img
       src={`${base_img_url}/${item.imagePath}`}
@@ -68,12 +72,12 @@ const RecipesList = () => {
 
   const handleGetList = async (page = 1, size = 10) => {
     try {
-      if (!isFromSearch) setLoader(true);
+      // if (!isFromSearch) setLoader(true);
       const response = await axiosInstance.get(Recipes_URLS.recipes, {
         params: {
           pageSize: size,
           pageNumber: page,
-          name: search,
+          name: searchQuery,
           tagId: selectedTag,
           categoryId: selectedCategory,
         },
@@ -102,8 +106,14 @@ const RecipesList = () => {
     }
   };
   useEffect(() => {
-    handleGetList(pageNumber, pageSize, search, selectedTag, selectedCategory);
-  }, [pageNumber, pageSize, search, selectedTag, selectedCategory]);
+    handleGetList(
+      pageNumber,
+      pageSize,
+      searchQuery,
+      selectedTag,
+      selectedCategory
+    );
+  }, [pageNumber, pageSize, searchQuery, selectedTag, selectedCategory]);
 
   return (
     <>
@@ -131,10 +141,10 @@ const RecipesList = () => {
             />
             <div className="d-flex flex-wrap gap-3 mt-4">
               <Search
-                search={search}
+                search={searchInput}
                 setSearch={(value) => {
-                  setIsFromSearch(true);
-                  setSearch(value);
+                  setSearchInput(value);
+                  debouncedSearch(value);
                 }}
                 searchPlaceHolder="Search here ..."
               />
